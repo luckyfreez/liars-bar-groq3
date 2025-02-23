@@ -2,6 +2,12 @@
 class Card {
     constructor(type) {
         this.type = type;
+        this.suit = this.getRandomSuit();
+    }
+
+    getRandomSuit() {
+        const suits = ['♠', '♣', '♥', '♦'];
+        return this.type === 'Joker' ? '★' : suits[Math.floor(Math.random() * suits.length)];
     }
 }
 
@@ -55,14 +61,35 @@ let lastDeclaration = null;
 let selectedCards = [];
 
 // UI functions
+function getSuitClass(suit) {
+    switch(suit) {
+        case '♥': return 'hearts';
+        case '♦': return 'diamonds';
+        case '♠': return 'spades';
+        case '♣': return 'clubs';
+        default: return '';
+    }
+}
+
 function renderHand() {
     const handDiv = document.getElementById('player-hand');
     handDiv.innerHTML = '';
     players[0].hand.forEach(card => {
         const cardDiv = document.createElement('div');
-        cardDiv.className = 'card card-front';
-        cardDiv.textContent = card.type === 'Joker' ? 'J' : card.type[0];
-        cardDiv.dataset.type = card.type;
+        const suitClass = card.type === 'Joker' ? 'joker' : getSuitClass(card.suit);
+        cardDiv.className = `card card-front ${suitClass}`;
+        const typeLetter = card.type === 'Joker' ? 'J' : card.type[0];
+        cardDiv.innerHTML = `
+            <div class="corner top-left">
+                <span>${typeLetter}</span>
+                <span class="suit">${card.suit}</span>
+            </div>
+            <span class="rank">${typeLetter}</span>
+            <div class="corner bottom-right">
+                <span>${typeLetter}</span>
+                <span class="suit">${card.suit}</span>
+            </div>
+        `;
         cardDiv.addEventListener('click', () => {
             if (cardDiv.classList.contains('selected')) {
                 cardDiv.classList.remove('selected');
@@ -81,10 +108,23 @@ function renderTable(cards, revealed = false) {
     tableDiv.innerHTML = '';
     cards.forEach(card => {
         const cardDiv = document.createElement('div');
-        cardDiv.className = revealed ? 'card card-front' : 'card card-back';
         if (revealed) {
-            cardDiv.textContent = card.type === 'Joker' ? 'J' : card.type[0];
-            cardDiv.dataset.type = card.type;
+            const suitClass = card.type === 'Joker' ? 'joker' : getSuitClass(card.suit);
+            cardDiv.className = `card card-front ${suitClass}`;
+            const typeLetter = card.type === 'Joker' ? 'J' : card.type[0];
+            cardDiv.innerHTML = `
+                <div class="corner top-left">
+                    <span>${typeLetter}</span>
+                    <span class="suit">${card.suit}</span>
+                </div>
+                <span class="rank">${typeLetter}</span>
+                <div class="corner bottom-right">
+                    <span>${typeLetter}</span>
+                    <span class="suit">${card.suit}</span>
+                </div>
+            `;
+        } else {
+            cardDiv.className = 'card card-back';
         }
         cardDiv.classList.add('played-card');
         tableDiv.appendChild(cardDiv);
@@ -136,20 +176,10 @@ async function playGame() {
             ({ cards, declaration } = await new Promise(resolve => {
                 selectedCards = [];
                 setMessage('Select up to 3 cards to play.');
-                showButtons([{
-                    text: 'Play',
-                    callback: () => {
-                        if (selectedCards.length >= 1 && selectedCards.length <= 3) {
-                            setMessage('Declare the card type:');
-                            showButtons(CARD_TYPES.map(type => ({
-                                text: type,
-                                callback: () => resolve({ cards: selectedCards, declaration: type })
-                            })));
-                        } else {
-                            setMessage('Please select 1 to 3 cards.');
-                        }
-                    }
-                }]);
+                showButtons(CARD_TYPES.map(type => ({
+                    text: type,
+                    callback: () => resolve({ cards: selectedCards, declaration: type })
+                })));
             }));
             currentPlayer.hand = currentPlayer.hand.filter(card => !cards.includes(card));
             renderHand();
