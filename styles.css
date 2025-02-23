@@ -1,0 +1,131 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #2e7d32; /* Green felt-like background */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#game-container {
+    max-width: 1200px;
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #ffd700; /* Gold title */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#ai-players {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.ai-player {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 18px;
+    border: 1px solid #ffd700;
+}
+
+#table {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+#player-hand {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.card {
+    width: 70px;
+    height: 100px;
+    margin: 5px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    user-select: none;
+}
+
+.card-front {
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.card-back {
+    background: linear-gradient(45deg, #b71c1c, #d32f2f);
+    color: transparent;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.card.selected {
+    border: 3px solid #ffd700;
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+.card:hover:not(.card-back) {
+    transform: scale(1.05);
+}
+
+#controls {
+    margin-top: 20px;
+}
+
+#message {
+    font-size: 18px;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+#action-buttons button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    background-color: #ffd700;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#action-buttons button:hover {
+    background-color: #ffeb3b;
+}
+
+@keyframes card-play {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-50px); }
+    100% { transform: translateY(0); }
+}
+
+.played-card {
+    animation: card-play 0.5s ease;
+}
